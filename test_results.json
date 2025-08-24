@@ -1,0 +1,101 @@
+{
+  "timestamp": "2025-08-24T22:38:52.686136",
+  "tests": {
+    "file_home_env_power_detector_v3.py": {
+      "status": "PASS",
+      "message": "파일 존재: home_env_power_detector_v3.py",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.687136"
+    },
+    "file_ewma_baseline_ch01.json": {
+      "status": "PASS",
+      "message": "파일 존재: ewma_baseline_ch01.json",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.687136"
+    },
+    "file_anomaly_detector_package.py": {
+      "status": "PASS",
+      "message": "파일 존재: anomaly_detector_package.py",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.688606"
+    },
+    "file_run_v3_test.py": {
+      "status": "PASS",
+      "message": "파일 존재: run_v3_test.py",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.688606"
+    },
+    "baseline_loading": {
+      "status": "PASS",
+      "message": "베이스라인 로드 성공 - 평균: 361.3W, 표준편차: 289.0W, 데이터: 80,352,000개",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.691123"
+    },
+    "normal_data": {
+      "status": "PASS",
+      "message": "정상 데이터 처리 완료 (이벤트: 0개)",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.692123"
+    },
+    "anomaly_data": {
+      "status": "PASS",
+      "message": "이상 데이터 탐지 성공 (이벤트: 2개)",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.692123"
+    },
+    "package_normal": {
+      "status": "PASS",
+      "message": "패키지 정상 데이터 처리 성공",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.705368"
+    },
+    "package_anomaly": {
+      "status": "PASS",
+      "message": "패키지 이상 데이터 탐지 성공 (1개 이벤트)",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.705368"
+    },
+    "data_formats": {
+      "status": "PASS",
+      "message": "다양한 데이터 형식 처리 성공",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.705368"
+    },
+    "package_status": {
+      "status": "PASS",
+      "message": "패키지 상태 확인 성공 (처리: 5개)",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.705368"
+    },
+    "batch_processing": {
+      "status": "PASS",
+      "message": "배치 처리 성공 (2개 이벤트 탐지)",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.741385"
+    },
+    "performance": {
+      "status": "PASS",
+      "message": "성능 테스트 통과 - 166646 데이터/초 처리",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.749387"
+    },
+    "integration_import": {
+      "status": "PASS",
+      "message": "통합 예시 임포트 성공",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.964050"
+    },
+    "fastapi_compatibility": {
+      "status": "PASS",
+      "message": "FastAPI 호환성 확인 완료",
+      "details": null,
+      "timestamp": "2025-08-24T22:38:52.964050"
+    }
+  },
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0,
+    "errors": []
+  }
+}

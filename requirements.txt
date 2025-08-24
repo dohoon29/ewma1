@@ -1,2 +1,7 @@
 pandas==2.3.2
 numpy==2.3.2
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+websockets==11.0.3
+pydantic==2.5.0
+requests==2.31.0
