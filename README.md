@@ -12,7 +12,7 @@
 - **EWMA(지수 가중 이동 평균)** 기반 패턴 분석
 - **실시간 스트리밍** 데이터 처리
 - **다중 센서 통합** 분석 (전력, 온도, 습도, 조도)
-- **계절별 온열 환경** 이상 탐지
+- **계절별 온열 환경** 이상 탐지 (재실 여부와 무관)
 
 ## 🚀 빠른 시작 (기존 FastAPI 서버 통합)
 
@@ -111,11 +111,11 @@ timestamp,power_w,temp_c,rh,lux
 
 ### 5.2. 온도 기반 탐지
 
-실내외 온도 및 조도 데이터를 바탕으로 비정상적인 온열 환경을 탐지합니다. (관련 데이터가 모두 제공될 경우에만 동작)
+실내외 온도 데이터를 바탕으로 비정상적인 온열 환경을 탐지합니다. (실내온도와 실외온도 데이터가 모두 있을 경우에만 동작)
 
 - **여름철 (6-8월)**: 실내 온도가 실외보다 비정상적으로 높을 때 (`1°C` 이상 '경고', `3°C` 이상 '주의').
 - **겨울철 (12-2월)**: 실내 온도가 실외보다 충분히 따뜻하지 않을 때 (온도 차 `5°C` 이하 '경고', `3°C` 이하 '주의').
-- **재실 판단**: 조도(`lux`)가 특정 값 미만일 경우, 사람이 없는 것으로 간주하여 온도 관련 탐지를 수행하지 않습니다.
+- **동작 조건**: 실내온도와 실외온도 데이터만 있으면 항상 실행됩니다. (재실 여부와 무관하게 동작)
 
 ## 6. 사용 방법
 
@@ -223,7 +223,8 @@ async def your_endpoint(data: YourDataModel):
         "power_W": data.power_consumption,    # 필수
         "temp_C": data.temperature,           # 선택
         "rh_pct": data.humidity,             # 선택  
-        "lux": data.light_level,             # 선택
+        "lux": data.light_level,             # 선택 (온도 탐지와 무관)
+        "outdoor_temp_C": data.outdoor_temp,  # 온도 탐지용 (선택)
         "timestamp": data.created_at         # 선택
     }
     
@@ -275,7 +276,8 @@ from anomaly_detector_package import Config
 custom_config = Config(
     ewma_k=2.5,              # 더 민감하게 (기본: 3.0)
     current_limit_A=25.0,    # 전류 제한 낮춤 (기본: 30.0)
-    spike_delta_A=8.0        # 스파이크 임계값 낮춤 (기본: 10.0)
+    spike_delta_A=8.0,       # 스파이크 임계값 낮춤 (기본: 10.0)
+    use_lux_gate=False       # 조도 기반 재실 판단 비활성화 (온도 탐지 항상 실행)
 )
 
 detector = AnomalyDetectorManager(
@@ -299,6 +301,7 @@ class SensorReading(BaseModel):
     power_consumption: float
     temperature: float = None
     humidity: float = None
+    outdoor_temperature: float = None
 
 # 이상 탐지 매니저 초기화
 detector = AnomalyDetectorManager("ewma_baseline_ch01.json")
@@ -311,7 +314,8 @@ async def log_sensor_reading(reading: SensorReading):
     # 이상 탐지 추가 (3줄)
     detection_data = {
         "power_W": reading.power_consumption,
-        "temp_C": reading.temperature
+        "temp_C": reading.temperature,
+        "outdoor_temp_C": reading.outdoor_temperature
     }
     result = await detector.process_data(detection_data)
     
@@ -346,6 +350,7 @@ if __name__ == "__main__":
 3. **유연한 데이터 형식**: 다양한 키명 자동 인식
 4. **비동기 지원**: FastAPI와 완벽 호환
 5. **확장 가능**: 콜백, 커스텀 설정 등 고급 기능 지원
+6. **온도 탐지 간소화**: 실내외 온도만 있으면 항상 실행 (재실 조건 제거)
 
 **🎉 이제 기존 FastAPI 서버에서 강력한 실시간 이상 탐지를 사용할 수 있습니다!**
 
@@ -414,5 +419,17 @@ requirements.txt                 # 📦 Python 의존성 목록
 - **실시간 모니터링**: `anomaly_detector_package.py` 사용 (기존 서버 통합)
 - **개발/테스트**: `realtime_anomaly_server.py` 사용 (독립 실행)  
 - **데이터 분석**: `run_v3_test.py` 사용 (배치 처리)
+
+## 📋 **주요 변경사항**
+
+### 🌡️ **온도 이상탐지 개선**
+- **재실 조건 제거**: 조도(lux) 센서 없이도 온도 탐지 가능
+- **간소화된 조건**: 실내온도 + 실외온도만 있으면 항상 실행
+- **더 넓은 적용**: 빈 집, 사무실 등 다양한 환경에서 사용 가능
+
+### 🎯 **알고리즘 흐름 업데이트**
+- 온도 탐지 단계에서 재실 여부 확인 과정 제거
+- 더 직관적이고 단순한 탐지 로직
+- 실내외 온도 데이터만으로 계절별 환경 이상 탐지
 
 **🚀 목적에 맞는 파일을 선택해서 사용하세요!**
